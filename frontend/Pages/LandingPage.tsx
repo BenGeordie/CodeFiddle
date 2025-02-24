@@ -1,13 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import containerIdStore from "../Store/containerIdStore";
 
 import { Row, Col, Button, Input } from "antd";
 
 export const LandingPage = () => {
   const navigate = useNavigate();
   const [path, setPath] = useState("/Users/benitogeordie/oyster");
-  const [containerId, setContainerId] = useState("a37cd56ae12dbbdd8fe6e838c08257f8de5b960633215503dc25cdfc5261bdc1");
+  const [environment, setEnvironment] = useState("a37cd56ae12dbbdd8fe6e838c08257f8de5b960633215503dc25cdfc5261bdc1");
+  const setContainerId = containerIdStore((state) => state.setContainerId);
 
+  useEffect(() => {
+    setContainerId(null);
+  }, []);
+  
   const handleSubmit = () => {
     if (!path.trim()) {
       alert('Please enter a valid path');
@@ -16,7 +22,7 @@ export const LandingPage = () => {
     
     try {
       const encodedPath = encodeURIComponent(path);
-      const encodedContainerId = encodeURIComponent(containerId);
+      const encodedContainerId = encodeURIComponent(environment);
       navigate(`/playground/${encodedPath}?environment=${encodedContainerId}`);
     } catch (err) {
       console.error('Error encoding path:', err);
@@ -51,8 +57,8 @@ export const LandingPage = () => {
           
           <Input
             placeholder="Enter Container or Image ID (optional)"
-            value={containerId}
-            onChange={(e) => setContainerId(e.target.value)}
+            value={environment}
+            onChange={(e) => setEnvironment(e.target.value)}
             style={{ marginBottom: "1.5rem" }}
             onPressEnter={handleSubmit}
           />

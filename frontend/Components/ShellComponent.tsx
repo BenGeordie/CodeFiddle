@@ -20,6 +20,7 @@ export const ShellComponent = () => {
   const [searchParams] = useSearchParams();
   const environment = searchParams.get("environment");
 
+  console.log("Creating new websocket");
   const ws = new WebSocket(
     "ws://localhost:3000/shell/?playgroundId=" + encodeURIComponent(playgroundId as string) + "&environment=" + encodeURIComponent(environment as string)
   );
