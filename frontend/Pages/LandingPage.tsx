@@ -5,8 +5,8 @@ import { Row, Col, Button, Input } from "antd";
 
 export const LandingPage = () => {
   const navigate = useNavigate();
-  const [path, setPath] = useState("");
-  const [containerId, setContainerId] = useState("");
+  const [path, setPath] = useState("/Users/benitogeordie/oyster");
+  const [containerId, setContainerId] = useState("a37cd56ae12dbbdd8fe6e838c08257f8de5b960633215503dc25cdfc5261bdc1");
 
   const handleSubmit = () => {
     if (!path.trim()) {

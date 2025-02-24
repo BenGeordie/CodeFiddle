@@ -54,6 +54,11 @@ export interface ShellSocketStoreState {
   setWs: (ws: WebSocket) => void;
 }
 
+export interface ContainerIdStoreState {
+  containerId: string | null;
+  setContainerId: (containerId: string) => void;
+}
+
 export interface WebsocketStoreState {
   ws: WebSocket | null;
   setWs: (ws: WebSocket) => void;

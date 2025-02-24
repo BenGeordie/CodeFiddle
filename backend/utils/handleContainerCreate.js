@@ -29,8 +29,10 @@ async function checkImageExists(imageId) {
 }
 
 const getExistingContainerByNameOrIdOrImageId = async (environment) => {
-  const containers = await docker.listContainers();
+  console.log("Getting existing container", environment);
+  const containers = await docker.listContainers({ all: true });
   for (const container of containers) {
+    console.log("Container meta", container.Names, container.Id, container.Image);
     if (container.Names.includes(environment) || container.Id.startsWith(environment) || container.Image === environment) {
       console.log("Container found", container.Id);
       return docker.getContainer(container.Id);
@@ -67,25 +69,20 @@ const makeContainerByImageId = async (environment) => {
 
 const handleContainerCreate = async (playgroundId, wsForShell, req, socket, head, environment) => {
   try {
-    console.log("Environment", environment);
-    
-    // First check for existing containers
-    const containers = await docker.listContainers();
-    
     let container = await getExistingContainerByNameOrIdOrImageId(environment);
 
     if (!container) {
       container = await makeContainerByImageId(environment);
     }
-
+    
     if (!container) {
       container = await getExistingContainerByNameOrIdOrImageId("oyster_base");
     }
-
+    
     if (!container) {
       container = await makeContainerByImageId("oyster_base");
     }
-
+    
     if (!container) {
       throw new Error("Could not create container");
     }

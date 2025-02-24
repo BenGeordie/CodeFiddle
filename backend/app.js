@@ -81,12 +81,7 @@ wsForMonaco.on("connection", (ws, req) => {
 
 wsForShell.on("connection", (ws, req, container, playgroundId) => {
   handleShellCreation(container, ws, playgroundId);
-  // ws.on("close", () => {
-  //   container.remove({ force: true }, (err, data) => {
-  //     if (err) console.log(err);
-  //     else console.log(`Killed container ${container.id} with no error`);
-  //   });
-  // });
+  ws.send(JSON.stringify({ type: "containerId", payload: { containerId: container.id } }));
 });
 
 server.on("upgrade", (req, socket, head) => {

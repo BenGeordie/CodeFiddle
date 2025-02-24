@@ -7,12 +7,13 @@ import { ReloadOutlined } from "@ant-design/icons";
 import portStore from "../Store/portStore";
 import shellSocketStore from "../Store/shellSocketStore";
 import websocketStore from "../Store/websocketStore";
-
+import containerIdStore from "../Store/containerIdStore";
 export const BrowserComponent: React.FC = () => {
   const { playgroundId } = useParams();
 
   const port = portStore((state) => state.port);
   const wsForShell = shellSocketStore((state) => state.wsForShell);
+  const containerId = containerIdStore((state) => state.containerId);
   const ws = websocketStore((state) => state.ws);
 
   const browser = useRef<HTMLIFrameElement>(null);
@@ -27,11 +28,13 @@ export const BrowserComponent: React.FC = () => {
     if (port && inputRef.current) inputRef.current.input.style.color = "white";
   }, [port]);
 
-  if (wsForShell) {
+  if (wsForShell && containerId) {
+    console.log("Sending registerPort message", containerId);
     const message = {
       type: "registerPort",
       payload: {
         data: playgroundId,
+        containerId: containerId,
       },
     };
     ws?.send(JSON.stringify(message));
