@@ -43,7 +43,7 @@ wsForMonaco.on("connection", (ws, req) => {
   console.log("playgroundId", playgroundId);
   if (playgroundId) {
     const watcher = chokidar.watch(
-      `${__dirname}/playgrounds/${playgroundId}/`,
+      playgroundId,
       {
         persistent: true,
         ignoreInitial: true,
@@ -81,12 +81,12 @@ wsForMonaco.on("connection", (ws, req) => {
 
 wsForShell.on("connection", (ws, req, container, playgroundId) => {
   handleShellCreation(container, ws, playgroundId);
-  ws.on("close", () => {
-    container.remove({ force: true }, (err, data) => {
-      if (err) console.log(err);
-      else console.log(`Killed container ${container.id} with no error`);
-    });
-  });
+  // ws.on("close", () => {
+  //   container.remove({ force: true }, (err, data) => {
+  //     if (err) console.log(err);
+  //     else console.log(`Killed container ${container.id} with no error`);
+  //   });
+  // });
 });
 
 server.on("upgrade", (req, socket, head) => {

@@ -26,9 +26,7 @@ const handleContainerCreate = async (playgroundId, wsForShell, req, socket, head
         AttachStdout: true,
         Cmd: "/bin/bash".split(" "),
         Tty: true,
-        Volumes: {
-          "/home/codefiddle/code": {},
-        },
+        // TODO: What is this for?
         HostConfig: {
           Binds: [
             `${process.env.HOME}/:/localuser/`

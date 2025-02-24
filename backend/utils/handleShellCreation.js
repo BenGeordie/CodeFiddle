@@ -2,10 +2,12 @@ const path = require("path");
 const processOutput = require("./processOutput");
 
 const handleShellCreation = (container, ws, playgroundId) => {
-  console.log(["bin/bash", "-c", `cd ${path.resolve(__dirname + "/../playgrounds/" + playgroundId + "/code").replace(`${process.env.HOME}`, "/localuser")} && /bin/bash`])
+  console.log(playgroundId);
+  console.log(process.env.HOME)
+  console.log(`cd ${playgroundId.replace(`${process.env.HOME}`, "/localuser")} && /bin/bash`);
   container.exec(
     {
-      Cmd: ["bin/bash", "-c", `cd ${path.resolve(__dirname + "/../playgrounds/" + playgroundId + "/code").replace(`${process.env.HOME}`, "/localuser")} && /bin/bash`],
+      Cmd: ["bin/bash", "-c", `cd ${playgroundId.replace(`${process.env.HOME}`, "/localuser")} && /bin/bash`],
       AttachStdin: true,
       AttachStdout: true,
       AttachStderr: true,

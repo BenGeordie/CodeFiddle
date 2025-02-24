@@ -19,6 +19,7 @@ import createFileOrFolderStore from "../Store/createFileOrFolderStore";
 
 export const Playground = () => {
   const { playgroundId } = useParams();
+  console.log("PlaygroundID", playgroundId)
 
   const setFolderStructure = folderStructureStore(
     (state) => state.setFolderStructure
@@ -31,7 +32,7 @@ export const Playground = () => {
 
   if (playgroundId) setFolderStructure(playgroundId);
 
-  const ws = new WebSocket("ws://localhost:3000/?playgroundId=" + playgroundId);
+  const ws = new WebSocket("ws://localhost:3000/?playgroundId=" + encodeURIComponent(playgroundId as string));
 
   ws.onopen = () => {
     setWs(ws);
