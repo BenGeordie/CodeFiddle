@@ -26,7 +26,7 @@ export const LandingPage = () => {
           style={{ fontSize: "40px", padding: "100px", top: "33vh" }}
           onClick={handleClick}
         >
-          Create Playground
+          Open Project
         </Button>
       </Col>
       <Col xxl={5} xl={5} lg={5} md={3} xs={2} />
