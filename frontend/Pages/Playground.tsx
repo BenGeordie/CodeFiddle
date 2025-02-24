@@ -10,6 +10,7 @@ import { EditorTabsComponent } from "../Components/EditorTabsComponent";
 import { BrowserComponent } from "../Components/BrowserComponent";
 import { FolderModal } from "../Components/FolderModal";
 import { FileModal } from "../Components/FileModal";
+import { ShareContainer } from "../Components/ShareContainer";
 
 import folderStructureStore from "../Store/folderStructureStore";
 import activeTabStore from "../Store/activeTabStore";
@@ -62,6 +63,7 @@ export const Playground = () => {
       <>
         <FolderModal />
         <FileModal />
+        <ShareContainer />
         <div style={{ display: "flex" }}>
           <div
             className="folder-structure-parent"

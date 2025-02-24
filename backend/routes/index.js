@@ -6,10 +6,18 @@ const fs = require("fs");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const Docker = require('dockerode');
-const docker = new Docker(); // Connects to default socket
 
 const uuid4 = require("uuid4");
 const directoryTree = require("directory-tree");
+
+// Initialize Docker with auth config
+const docker = new Docker({
+  authconfig: {
+    username: process.env.DOCKER_USERNAME,
+    password: process.env.DOCKER_PASSWORD,
+    serveraddress: 'https://index.docker.io/v1/' // DockerHub registry URL
+  }
+});
 
 router
   .get("/tree/:playgroundId", (req, res) => {
@@ -27,21 +35,26 @@ router
         return res.status(400).json({ error: "Container ID is required" });
       }
 
-      // Generate a unique hash for the image name
-      const container = docker.getContainer(containerId);
-      
-      // Commit the container to a new image
       const imageName = uuid4().replace(/-/g, '');
+      const container = docker.getContainer(containerId);
+
+      // Commit with repository name including Docker Hub username
       await container.commit({
-        repo: imageName
+        repo: `${process.env.DOCKER_USERNAME}/playground`,
+        tag: imageName
       });
 
-      // Get the image reference
-      const image = docker.getImage(imageName);
+      const image = docker.getImage(`${process.env.DOCKER_USERNAME}/playground:${imageName}`);
 
-      // Push the image
-      const stream = await image.push();
-      
+      // Push with authentication
+      const stream = await image.push({
+        authconfig: {
+          username: process.env.DOCKER_USERNAME,
+          password: process.env.DOCKER_PASSWORD,
+          serveraddress: 'https://index.docker.io/v1/'
+        }
+      });
+
       // Handle the push stream
       await new Promise((resolve, reject) => {
         docker.modem.followProgress(stream, (err, output) => {
@@ -50,10 +63,9 @@ router
         });
       });
 
-      // Return the unique hash that can be used to pull the image
       res.json({ 
         success: true, 
-        imageName
+        imageName: `${process.env.DOCKER_USERNAME}/playground:${imageName}`
       });
 
     } catch (error) {

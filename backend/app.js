@@ -7,6 +7,7 @@ const { WebSocketServer } = require("ws");
 const querystring = require("querystring");
 const cors = require("cors");
 const chokidar = require("chokidar");
+const dotenv = require('dotenv');
 
 const indexRouter = require("./routes/index");
 
@@ -15,6 +16,8 @@ const handleContainerCreate = require("./utils/handleContainerCreate");
 const handleShellCreation = require("./utils/handleShellCreation");
 
 const app = express();
+
+dotenv.config();
 
 app.use(cors());
 app.use(logger("dev"));
