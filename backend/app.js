@@ -97,7 +97,7 @@ server.on("upgrade", (req, socket, head) => {
       wsForMonaco.emit("connection", ws, req);
     });
   } else {
-    const { playgroundId } = querystring.parse(req.url.split("?")[1]);
-    handleContainerCreate(playgroundId, wsForShell, req, socket, head);
+    const { playgroundId, environment } = querystring.parse(req.url.split("?")[1]);
+    handleContainerCreate(playgroundId, wsForShell, req, socket, head, environment);
   }
 });

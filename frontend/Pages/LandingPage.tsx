@@ -1,21 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-import axios from "axios";
-
-import { Row, Col, Button, Modal, Input } from "antd";
+import { Row, Col, Button, Input } from "antd";
 
 export const LandingPage = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [path, setPath] = useState("");
+  const [containerId, setContainerId] = useState("");
 
-  const handleClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    // TODO: Path must start with $HOME
+  const handleSubmit = () => {
     if (!path.trim()) {
       alert('Please enter a valid path');
       return;
@@ -23,7 +16,8 @@ export const LandingPage = () => {
     
     try {
       const encodedPath = encodeURIComponent(path);
-      navigate(`/playground/${encodedPath}`);
+      const encodedContainerId = encodeURIComponent(containerId);
+      navigate(`/playground/${encodedPath}?environment=${encodedContainerId}`);
     } catch (err) {
       console.error('Error encoding path:', err);
       alert('Invalid path format. Please try again.');
@@ -31,34 +25,47 @@ export const LandingPage = () => {
   };
 
   return (
-    <>
-      <Row>
-        <Col xxl={5} xl={5} lg={5} md={3} xs={2} />
-        <Col xxl={14} xl={14} lg={14} md={18} xs={20}>
+    <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
+      <Col xs={20} sm={16} md={12} lg={8}>
+        <div style={{ 
+          padding: "2rem",
+          background: "#282a36",
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}>
+          <h1 style={{ 
+            color: "#f8f8f2",
+            marginBottom: "2rem",
+            textAlign: "center"
+          }}>
+            CodeFiddle
+          </h1>
+          
+          <Input
+            placeholder="Enter the full path to your project folder"
+            value={path}
+            onChange={(e) => setPath(e.target.value)}
+            style={{ marginBottom: "1rem" }}
+            onPressEnter={handleSubmit}
+          />
+          
+          <Input
+            placeholder="Enter Container or Image ID (optional)"
+            value={containerId}
+            onChange={(e) => setContainerId(e.target.value)}
+            style={{ marginBottom: "1.5rem" }}
+            onPressEnter={handleSubmit}
+          />
+          
           <Button
             type="primary"
-            style={{ fontSize: "40px", padding: "100px", top: "33vh" }}
-            onClick={handleClick}
+            onClick={handleSubmit}
+            style={{ width: "100%" }}
           >
-            Open Project
+            Go to Playground
           </Button>
-        </Col>
-        <Col xxl={5} xl={5} lg={5} md={3} xs={2} />
-      </Row>
-      
-      <Modal
-        title="Enter Project Path"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={() => setIsModalOpen(false)}
-      >
-        <Input
-          placeholder="Enter the full path to your project folder"
-          value={path}
-          onChange={(e) => setPath(e.target.value)}
-          onPressEnter={handleOk}
-        />
-      </Modal>
-    </>
+        </div>
+      </Col>
+    </Row>
   );
 };

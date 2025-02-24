@@ -13,10 +13,10 @@ export const ShellComponent = () => {
 
   const terminal = useRef(null);
 
-  const { playgroundId } = useParams();
+  const { playgroundId, environment } = useParams();
 
   const ws = new WebSocket(
-    "ws://localhost:3000/shell/?playgroundId=" + playgroundId
+    "ws://localhost:3000/shell/?playgroundId=" + encodeURIComponent(playgroundId as string) + "&environment=" + encodeURIComponent(environment as string)
   );
 
   useEffect(() => {

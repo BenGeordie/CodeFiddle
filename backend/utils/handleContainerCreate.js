@@ -2,47 +2,99 @@ const Docker = require("dockerode");
 
 const docker = new Docker();
 
-const handleContainerCreate = async (playgroundId, wsForShell, req, socket, head) => {
+async function checkImageExists(imageId) {
   try {
-    // First check for existing containers
-    const containers = await docker.listContainers({
-      filters: {
-        ancestor: ['oyster_base'],
-        status: ['running']
+      // First check locally
+      try {
+          await docker.getImage(imageId).inspect();
+          return { exists: true, location: 'local' };
+      } catch (localError) {
+          // Image not found locally, check Docker Hub
+          const stream = await docker.pull(imageId);
+          
+          // Wait for the pull to complete
+          await new Promise((resolve, reject) => {
+              docker.modem.followProgress(stream, (err, result) => {
+                  if (err) reject(err);
+                  resolve(result);
+              });
+          });
+          
+          return { exists: true, location: 'remote' };
       }
+  } catch (error) {
+      // Image not found either locally or on Docker Hub
+      return { exists: false, location: null };
+  }
+}
+
+const getExistingContainerByNameOrIdOrImageId = async (environment) => {
+  const containers = await docker.listContainers();
+  for (const container of containers) {
+    if (container.Names.includes(environment) || container.Id.startsWith(environment) || container.Image === environment) {
+      console.log("Container found", container.Id);
+      return docker.getContainer(container.Id);
+    }
+  }
+};
+
+const makeContainerByImageId = async (environment) => {
+  const imageExists = await checkImageExists(environment);
+  if (imageExists.exists) {
+    const container = await docker.createContainer({
+      Image: environment,
+      AttachStderr: true,
+      AttachStdin: true,
+      AttachStdout: true,
+      Cmd: "/bin/bash".split(" "),
+      Tty: true,
+      HostConfig: {
+        Binds: [
+          `${process.env.HOME}/:/localuser/`
+        ],
+        PortBindings: {
+          "5173/tcp": [{ HostPort: "0" }],
+        },
+      },
+      ExposedPorts: {
+        "5173/tcp": {},
+      },
     });
+    console.log("Container created", container.id);
+    return container;
+  }
+};
 
-    let container;
+const handleContainerCreate = async (playgroundId, wsForShell, req, socket, head, environment) => {
+  try {
+    console.log("Environment", environment);
     
-    if (containers.length > 0) {
-      container = docker.getContainer(containers[0].Id);
-    } else {
-      console.log("creating new container");
-      // Create new container if none exists
-      container = await docker.createContainer({
-        Image: "oyster_base",
-        AttachStderr: true,
-        AttachStdin: true,
-        AttachStdout: true,
-        Cmd: "/bin/bash".split(" "),
-        Tty: true,
-        // TODO: What is this for?
-        HostConfig: {
-          Binds: [
-            `${process.env.HOME}/:/localuser/`
-          ],
-          PortBindings: {
-            "5173/tcp": [{ HostPort: "0" }],
-          },
-        },
-        ExposedPorts: {
-          "5173/tcp": {},
-        },
-      });
+    // First check for existing containers
+    const containers = await docker.listContainers();
+    
+    let container = await getExistingContainerByNameOrIdOrImageId(environment);
 
-      await container.start();
+    if (!container) {
+      container = await makeContainerByImageId(environment);
     }
 
+    if (!container) {
+      container = await getExistingContainerByNameOrIdOrImageId("oyster_base");
+    }
+
+    if (!container) {
+      container = await makeContainerByImageId("oyster_base");
+    }
+
+    if (!container) {
+      throw new Error("Could not create container");
+    }
+
+    const containerInfo = await container.inspect();
+    if (!containerInfo.State.Running) {
+      await container.start();
+    }
+    
     wsForShell.handleUpgrade(req, socket, head, (ws) => {
       wsForShell.emit("connection", ws, req, container, playgroundId);
     });
