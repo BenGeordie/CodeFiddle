@@ -13,7 +13,7 @@ const handleShellCreation = (container, ws, playgroundId) => {
       User: "ubuntu",
     },
     (err, exec) => {
-      console.log(err);s
+      console.log("err", err);
       exec.start(
         {
           stdin: false,
