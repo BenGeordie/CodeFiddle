@@ -126,8 +126,7 @@ const handleMonacoWebSocketEvents = (ws, type, data, pathToFileOrFolder) => {
       });
       break;
     case "registerPort":
-      const name = data;
-      docker.listContainers({ name: name }, (err, container) => {
+      docker.listContainers({ id: data }, (err, container) => {
         if (err) console.log(err);
         else {
           const port = container[0].Ports[0].PublicPort;

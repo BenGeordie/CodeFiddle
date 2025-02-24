@@ -9,8 +9,6 @@ import shellSocketStore from "../Store/shellSocketStore";
 import websocketStore from "../Store/websocketStore";
 import containerIdStore from "../Store/containerIdStore";
 export const BrowserComponent: React.FC = () => {
-  const { playgroundId } = useParams();
-
   const port = portStore((state) => state.port);
   const wsForShell = shellSocketStore((state) => state.wsForShell);
   const containerId = containerIdStore((state) => state.containerId);
@@ -33,8 +31,7 @@ export const BrowserComponent: React.FC = () => {
     const message = {
       type: "registerPort",
       payload: {
-        data: playgroundId,
-        containerId: containerId,
+        data: containerId,
       },
     };
     ws?.send(JSON.stringify(message));
