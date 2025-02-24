@@ -39,57 +39,166 @@ export const ShareContainer = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-[9999]">
+    <div style={{
+      position: 'fixed',
+      bottom: '16px',
+      right: '16px',
+      zIndex: 9999,
+    }}>
       {showPopup && (
-        <div className="absolute bottom-12 right-0 bg-[#282a36] border border-[#bd93f9] rounded-lg p-4 mb-2 w-80 shadow-lg">
-          <div className="flex justify-between items-center gap-2">
-            <span className="text-[#f8f8f2] font-mono text-sm truncate flex-1">
+        <div style={{
+          position: 'absolute',
+          bottom: '48px',
+          right: 0,
+          backgroundColor: '#282a36',
+          border: '1px solid #bd93f9',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '8px',
+          width: '320px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '8px',
+          }}>
+            <span style={{
+              color: '#f8f8f2',
+              fontFamily: 'monospace',
+              fontSize: '14px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              flex: 1,
+            }}>
               {imageName}
             </span>
             <button
               onClick={handleCopy}
-              className="flex items-center justify-center p-1.5 hover:bg-[#44475a] rounded transition-colors"
               title="Copy to clipboard"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '6px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                border: 'none',
+              }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#44475a'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
             >
-              <ClipboardIcon className="h-5 w-5 text-[#bd93f9]" />
+              <ClipboardIcon style={{ height: '20px', width: '20px', color: '#bd93f9' }} />
             </button>
           </div>
           <button
             onClick={() => setShowPopup(false)}
-            className="absolute top-2 right-2 text-[#6272a4] hover:text-[#f8f8f2] text-lg font-bold transition-colors"
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              color: '#6272a4',
+              fontSize: '18px',
+              fontWeight: 'bold',
+              backgroundColor: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#f8f8f2'}
+            onMouseLeave={e => e.currentTarget.style.color = '#6272a4'}
           >
             ×
           </button>
         </div>
       )}
-      <div className="flex items-center gap-3 bg-[#282a36] border border-[#bd93f9] rounded-lg px-4 py-2 shadow-lg">
-        <div className="flex flex-col">
-          <span className="text-[#6272a4] text-xs font-medium">Container ID</span>
-          <span className="text-[#f8f8f2] font-mono text-sm truncate max-w-[180px]">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        backgroundColor: '#282a36',
+        border: '1px solid #bd93f9',
+        borderRadius: '8px',
+        padding: '8px 16px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          <span style={{
+            color: '#6272a4',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            fontWeight: 500,
+          }}>
+            Container ID
+          </span>
+          <span style={{
+            color: '#f8f8f2',
+            fontFamily: 'monospace',
+            fontSize: '14px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '180px',
+          }}>
             {containerId || 'Not connected'}
           </span>
         </div>
-        <div className="h-8 w-[1px] bg-[#44475a]" /> {/* Vertical divider */}
+        <div style={{
+          height: '32px',
+          width: '1px',
+          backgroundColor: '#44475a',
+        }} />
         <button
           onClick={handleShare}
           disabled={!containerId || isLoading}
-          className={`
-            px-4 py-1.5 rounded bg-[#44475a] text-[#f8f8f2] font-medium text-sm
-            transition-all duration-200 flex items-center gap-2
-            ${!containerId 
-              ? 'opacity-50 cursor-not-allowed' 
-              : 'hover:bg-[#6272a4] hover:shadow-md active:transform active:scale-95'
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 16px',
+            borderRadius: '4px',
+            backgroundColor: '#44475a',
+            color: '#f8f8f2',
+            fontWeight: 500,
+            fontSize: '14px',
+            border: 'none',
+            cursor: containerId ? 'pointer' : 'not-allowed',
+            opacity: containerId ? 1 : 0.5,
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => {
+            if (containerId && !isLoading) {
+              e.currentTarget.style.backgroundColor = '#6272a4';
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
             }
-          `}
+          }}
+          onMouseLeave={e => {
+            if (containerId && !isLoading) {
+              e.currentTarget.style.backgroundColor = '#44475a';
+              e.currentTarget.style.boxShadow = 'none';
+            }
+          }}
         >
           {isLoading ? (
-            <div className="flex items-center gap-2">
-              <div className="animate-spin h-4 w-4 border-2 border-[#bd93f9] border-t-transparent rounded-full" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{
+                animation: 'spin 1s linear infinite',
+                height: '16px',
+                width: '16px',
+                border: '2px solid #bd93f9',
+                borderTopColor: 'transparent',
+                borderRadius: '50%',
+              }} />
               <span>Sharing...</span>
             </div>
           ) : (
             <>
-              <ShareIcon className="h-4 w-4" />
+              <ShareIcon style={{ height: '16px', width: '16px' }} />
               <span>Share</span>
             </>
           )}
