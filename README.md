@@ -66,6 +66,19 @@ In the backend, create a directory named playgrounds
 mkdir playgrounds
 ```
 
+In the frontend, create a .env file and add the following
+
+```
+VITE_BACKEND_URL=http://localhost:3000
+```
+
+In the backend, create a .env file and add the following
+
+```
+DOCKER_USERNAME=your_dockerhub_username
+DOCKER_PASSWORD=your_dockerhub_password
+```
+
 Run the frontend and backend
 
 ```
