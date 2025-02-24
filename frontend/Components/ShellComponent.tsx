@@ -12,7 +12,7 @@ import containerIdStore from "../Store/containerIdStore";
 export const ShellComponent = () => {
   const setWs = shellSocketStore((state) => state.setWs);
   const setContainerId = containerIdStore((state) => state.setContainerId);
-  const containerId = containerIdStore((state) => state.containerId);
+  const containerIdRef = useRef(null);
 
   const terminal = useRef(null);
 
@@ -47,14 +47,19 @@ export const ShellComponent = () => {
     fitAddon.fit();
     ws.onmessage = (msg) => {
       // If message is received, then WS must be open.
-      const data = JSON.parse(msg.data);
-      if (data.type === "containerId" && !containerId) {
-        setContainerId(data.payload.containerId);
-        // Attach terminal to WS only after the first message is received
-        // so the terminal is not confused by the containerId message.
-        const attachAddon = new AttachAddon(ws);
-        term.loadAddon(attachAddon);
-        setWs(ws);
+      // We check containerIdRef.current so that the reference is always
+      // up to date.
+      if (!containerIdRef.current) {
+        const data = JSON.parse(msg.data);
+        if (data.type === "containerId") {
+          setContainerId(data.payload.containerId);
+          containerIdRef.current = data.payload.containerId;
+          // Attach terminal to WS only after the first message is received
+          // so the terminal is not confused by the containerId message.
+          const attachAddon = new AttachAddon(ws);
+          term.loadAddon(attachAddon);
+          setWs(ws);
+        }
       }
     };
     return () => {
