@@ -60,11 +60,10 @@ export const Playground = () => {
 
   return (
     ws && (
-      <>
+      <div className="relative h-screen overflow-hidden">
         <FolderModal />
         <FileModal />
-        <ShareContainer />
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", height: "100%" }}>
           <div
             className="folder-structure-parent"
             style={{
@@ -72,7 +71,7 @@ export const Playground = () => {
               paddingTop: "0.2vh",
               minWidth: "250px",
               maxWidth: "25%",
-              height: "99.8vh",
+              height: "100%",
               backgroundColor: "#22212c",
               fontFamily: "Roboto, sans-serif",
               overflow: "auto",
@@ -80,7 +79,7 @@ export const Playground = () => {
           >
             <FolderStructureComponent />
           </div>
-          <div style={{ height: "100vh", width: "100vw" }}>
+          <div style={{ height: "100%", width: "100vw" }}>
             <Allotment>
               <div
                 style={{
@@ -101,7 +100,8 @@ export const Playground = () => {
             </Allotment>
           </div>
         </div>
-      </>
+        <ShareContainer />
+      </div>
     )
   );
 };

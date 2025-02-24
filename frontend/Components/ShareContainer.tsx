@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import containerIdStore from '../Store/containerIdStore';
-import { ClipboardIcon, ShareIcon } from '@heroicons/react/24/outline';
+import { ClipboardIcon } from '@heroicons/react/24/solid';
+import { ShareIcon } from '@heroicons/react/24/solid';
 
 export const ShareContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +39,7 @@ export const ShareContainer = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-[9999]">
       {showPopup && (
         <div className="absolute bottom-12 right-0 bg-[#282a36] border border-[#bd93f9] rounded-lg p-4 mb-2 w-80 shadow-lg">
           <div className="flex justify-between items-center gap-2">
@@ -74,7 +75,7 @@ export const ShareContainer = () => {
           disabled={!containerId || isLoading}
           className={`
             px-4 py-1.5 rounded bg-[#44475a] text-[#f8f8f2] font-medium text-sm
-            transition-all duration-200
+            transition-all duration-200 flex items-center gap-2
             ${!containerId 
               ? 'opacity-50 cursor-not-allowed' 
               : 'hover:bg-[#6272a4] hover:shadow-md active:transform active:scale-95'
@@ -87,8 +88,10 @@ export const ShareContainer = () => {
               <span>Sharing...</span>
             </div>
           ) : (
-            "Share"
-            // <ShareIcon className="h-4 w-4" />
+            <>
+              <ShareIcon className="h-4 w-4" />
+              <span>Share</span>
+            </>
           )}
         </button>
       </div>
