@@ -1,1 +1,1 @@
-FROM ubuntu:latest
+FROM --platform=linux/amd64 ubuntu:latest
