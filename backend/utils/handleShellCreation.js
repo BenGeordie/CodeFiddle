@@ -12,7 +12,6 @@ const handleShellCreation = (container, ws, playgroundId) => {
       AttachStdout: true,
       AttachStderr: true,
       Tty: true,
-      User: "ubuntu",
     },
     (err, exec) => {
       console.log("err", err);
