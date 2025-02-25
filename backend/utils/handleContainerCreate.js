@@ -6,13 +6,15 @@ async function checkImageExists(imageId) {
   try {
       // First check locally
       try {
+          console.log("Checking if image exists locally", imageId);
           await docker.getImage(imageId).inspect();
           return { exists: true, location: 'local' };
       } catch (localError) {
           // Image not found locally, check Docker Hub
+          console.log("Image not found locally, checking Docker Hub");
           const stream = await docker.pull(imageId);
-          
           // Wait for the pull to complete
+          console.log("Pulling image from Docker Hub");
           await new Promise((resolve, reject) => {
               docker.modem.followProgress(stream, (err, result) => {
                   if (err) reject(err);
