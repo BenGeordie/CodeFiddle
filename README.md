@@ -57,7 +57,7 @@ npm install
 Build the docker image
 
 ```
-docker build -t codefiddle .
+docker build -t oyster_base .
 ```
 
 In the backend, create a directory named playgrounds
