@@ -30,14 +30,16 @@ router
   })
   .post("/share", async (req, res) => {
     try {
+      console.log("Sharing container");
       const { containerId } = req.body;
       if (!containerId) {
         return res.status(400).json({ error: "Container ID is required" });
       }
-
+      
       const imageName = uuid4().replace(/-/g, '');
       const container = docker.getContainer(containerId);
-
+      
+      console.log("Committing container");
       // Commit with repository name including Docker Hub username
       await container.commit({
         repo: `${process.env.DOCKER_USERNAME}/playground`,
@@ -45,7 +47,8 @@ router
       });
 
       const image = docker.getImage(`${process.env.DOCKER_USERNAME}/playground:${imageName}`);
-
+      
+      console.log("Pushing image");
       // Push with authentication
       const stream = await image.push({
         authconfig: {
@@ -54,7 +57,8 @@ router
           serveraddress: 'https://index.docker.io/v1/'
         }
       });
-
+      
+      console.log("Handling push stream");
       // Handle the push stream
       await new Promise((resolve, reject) => {
         docker.modem.followProgress(stream, (err, output) => {
@@ -62,7 +66,8 @@ router
           resolve(output);
         });
       });
-
+      
+      console.log("Done");
       res.json({ 
         success: true, 
         imageName: `${process.env.DOCKER_USERNAME}/playground:${imageName}`
