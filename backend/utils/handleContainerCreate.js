@@ -69,7 +69,7 @@ const makeContainerByImageId = async (environment) => {
   }
 };
 
-const handleContainerCreate = async (playgroundId, wsForShell, req, socket, head, environment) => {
+const handleContainerCreate = async (projectPath, wsForShell, req, socket, head, environment) => {
   try {
     let container = await getExistingContainerByNameOrIdOrImageId(environment);
 
@@ -95,7 +95,7 @@ const handleContainerCreate = async (playgroundId, wsForShell, req, socket, head
     }
     
     wsForShell.handleUpgrade(req, socket, head, (ws) => {
-      wsForShell.emit("connection", ws, req, container, playgroundId);
+      wsForShell.emit("connection", ws, req, container, projectPath);
     });
 
   } catch (err) {

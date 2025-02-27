@@ -21,7 +21,7 @@ export const LandingPage = () => {
     
     try {
       const encodedPath = encodeURIComponent(path);
-      navigate(`/playground/${encodedPath}`);
+      navigate(`/project/${encodedPath}`);
     } catch (err) {
       console.error('Error encoding path:', err);
       alert('Invalid path format. Please try again.');
@@ -58,7 +58,7 @@ export const LandingPage = () => {
             onClick={handleSubmit}
             style={{ width: "100%" }}
           >
-            Go to Playground
+            Go to Project
           </Button>
         </div>
       </Col>

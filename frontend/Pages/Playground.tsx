@@ -19,9 +19,8 @@ import portStore from "../Store/portStore";
 import createFileOrFolderStore from "../Store/createFileOrFolderStore";
 
 export const Playground = () => {
-  const { playgroundId } = useParams();
-  console.log("PlaygroundID", playgroundId)
-
+  const { projectPath } = useParams();
+  
   const setFolderStructure = folderStructureStore(
     (state) => state.setFolderStructure
   );
@@ -31,9 +30,9 @@ export const Playground = () => {
   const setPath = createFileOrFolderStore((state) => state.setPath);
   const setIsFile = createFileOrFolderStore((state) => state.setIsFile);
 
-  if (playgroundId) setFolderStructure(playgroundId);
+  if (projectPath) setFolderStructure(projectPath);
 
-  const ws = new WebSocket("ws://localhost:3000/?playgroundId=" + encodeURIComponent(playgroundId as string));
+  const ws = new WebSocket("ws://localhost:3000/?projectPath=" + encodeURIComponent(projectPath as string));
 
   ws.onopen = () => {
     setWs(ws);
@@ -50,7 +49,7 @@ export const Playground = () => {
           setPort(port);
           break;
         case "validateFolderStructure":
-          if (playgroundId) setFolderStructure(playgroundId);
+          if (projectPath) setFolderStructure(projectPath);
           setPath(null);
           setIsFile(-1);
           break;

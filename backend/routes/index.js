@@ -20,12 +20,11 @@ const docker = new Docker({
 });
 
 router
-  .get("/tree/:playgroundId", (req, res) => {
-    const playgroundId = req.params.playgroundId;
-    const playGroundPath = path.resolve(
-      playgroundId
+  .get("/tree/:projectPath", (req, res) => {
+    const projectPath = path.resolve(
+      req.params.projectPath
     );
-    const tree = directoryTree(playGroundPath);
+    const tree = directoryTree(projectPath);
     res.json(tree);
   })
   .post("/share", async (req, res) => {
@@ -42,11 +41,11 @@ router
       console.log("Committing container");
       // Commit with repository name including Docker Hub username
       await container.commit({
-        repo: `${process.env.DOCKER_USERNAME}/playground`,
+        repo: `${process.env.DOCKER_USERNAME}/oyster-env`,
         tag: imageName
       });
 
-      const image = docker.getImage(`${process.env.DOCKER_USERNAME}/playground:${imageName}`);
+      const image = docker.getImage(`${process.env.DOCKER_USERNAME}/oyster-env:${imageName}`);
       
       console.log("Pushing image");
       // Push with authentication
@@ -70,7 +69,7 @@ router
       console.log("Done");
       res.json({ 
         success: true, 
-        imageName: `${process.env.DOCKER_USERNAME}/playground:${imageName}`
+        imageName: `${process.env.DOCKER_USERNAME}/oyster-env:${imageName}`
       });
 
     } catch (error) {

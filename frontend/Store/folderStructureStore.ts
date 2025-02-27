@@ -4,9 +4,9 @@ import { FolderStructureStoreState } from "../Types/types";
 
 const folderStructureStore = create<FolderStructureStoreState>()((set) => ({
   folderStructure: null,
-  setFolderStructure: async (playgroundId) => {
+  setFolderStructure: async (projectPath) => {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/tree/${encodeURIComponent(playgroundId)}`
+      `${import.meta.env.VITE_BACKEND_URL}/api/tree/${encodeURIComponent(projectPath)}`
     );
     set({ folderStructure: await response.json() });
   },

@@ -42,11 +42,10 @@ const wsForShell = new WebSocketServer({
 
 wsForMonaco.on("connection", (ws, req) => {
   const params = querystring.parse(req.url.split("?")[1]);
-  const playgroundId = params.playgroundId;
-  console.log("playgroundId", playgroundId);
-  if (playgroundId) {
+  const projectPath = params.projectPath;
+  if (projectPath) {
     const watcher = chokidar.watch(
-      playgroundId,
+      projectPath,
       {
         persistent: true,
         ignoreInitial: true,
@@ -83,8 +82,8 @@ wsForMonaco.on("connection", (ws, req) => {
   }
 });
 
-wsForShell.on("connection", (ws, req, container, playgroundId) => {
-  handleShellCreation(container, ws, playgroundId);
+wsForShell.on("connection", (ws, req, container, projectPath) => {
+  handleShellCreation(container, ws, projectPath);
   ws.send(JSON.stringify({ type: "containerId", payload: { containerId: container.id } }));
 });
 
@@ -96,7 +95,7 @@ server.on("upgrade", (req, socket, head) => {
       wsForMonaco.emit("connection", ws, req);
     });
   } else {
-    const { playgroundId, environment } = querystring.parse(req.url.split("?")[1]);
-    handleContainerCreate(playgroundId, wsForShell, req, socket, head, environment);
+    const { projectPath, environment } = querystring.parse(req.url.split("?")[1]);
+    handleContainerCreate(projectPath, wsForShell, req, socket, head, environment);
   }
 });

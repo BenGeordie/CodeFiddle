@@ -41,7 +41,7 @@ export interface FolderStructure {
 
 export interface FolderStructureStoreState {
   folderStructure: FolderStructure | null;
-  setFolderStructure: (playgroundId: string) => void;
+  setFolderStructure: (projectPath: string) => void;
 }
 
 export interface PortStoreState {

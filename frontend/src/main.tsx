@@ -16,7 +16,7 @@ const routes = [
     element: <LandingPage />,
   },
   {
-    path: "playground/:playgroundId",
+    path: "project/:projectPath",
     element: <Playground />,
   },
 ];
