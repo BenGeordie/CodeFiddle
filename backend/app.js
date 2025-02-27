@@ -50,6 +50,7 @@ wsForMonaco.on("connection", (ws, req) => {
       {
         persistent: true,
         ignoreInitial: true,
+        // TODO: Can I not ignore? Should I adjust what gets ignored based on the project?
         ignored: (path) => path.includes("node_modules"),
         awaitWriteFinish: { stabilityThreshold: 2000 },
       }

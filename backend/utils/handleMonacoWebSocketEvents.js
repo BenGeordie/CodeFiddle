@@ -6,6 +6,7 @@ const docker = new Docker();
 
 const handleMonacoWebSocketEvents = (ws, type, data, pathToFileOrFolder) => {
   switch (type) {
+    // TODO: Does this ALWAYS write the WHOLE file??
     case "writeFile":
       fs.writeFile(pathToFileOrFolder, data, (err) => {
         if (err) {
