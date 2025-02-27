@@ -7,7 +7,6 @@ import { Row, Col, Button, Input } from "antd";
 export const LandingPage = () => {
   const navigate = useNavigate();
   const [path, setPath] = useState("");
-  const [environment, setEnvironment] = useState("");
   const setContainerId = containerIdStore((state) => state.setContainerId);
 
   useEffect(() => {
@@ -22,8 +21,7 @@ export const LandingPage = () => {
     
     try {
       const encodedPath = encodeURIComponent(path);
-      const encodedContainerId = encodeURIComponent(environment);
-      navigate(`/playground/${encodedPath}?environment=${encodedContainerId}`);
+      navigate(`/playground/${encodedPath}`);
     } catch (err) {
       console.error('Error encoding path:', err);
       alert('Invalid path format. Please try again.');
@@ -48,18 +46,10 @@ export const LandingPage = () => {
           </h1>
           
           <Input
-            placeholder="Enter the full path to your project folder"
+            placeholder="Enter the link or local path to your project"
             value={path}
             onChange={(e) => setPath(e.target.value)}
             style={{ marginBottom: "1rem" }}
-            onPressEnter={handleSubmit}
-          />
-          
-          <Input
-            placeholder="Enter Container or Image ID (optional)"
-            value={environment}
-            onChange={(e) => setEnvironment(e.target.value)}
-            style={{ marginBottom: "1.5rem" }}
             onPressEnter={handleSubmit}
           />
           
