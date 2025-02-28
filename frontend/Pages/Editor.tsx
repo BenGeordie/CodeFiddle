@@ -17,8 +17,9 @@ import activeTabStore from "../Store/activeTabStore";
 import websocketStore from "../Store/websocketStore";
 import portStore from "../Store/portStore";
 import createFileOrFolderStore from "../Store/createFileOrFolderStore";
+import projectPathStore from "../Store/projectPathStore";
 
-export const Playground = () => {
+export const Editor = () => {
   const { projectPath } = useParams();
   
   const setFolderStructure = folderStructureStore(
@@ -29,8 +30,12 @@ export const Playground = () => {
   const setPort = portStore((state) => state.setPort);
   const setPath = createFileOrFolderStore((state) => state.setPath);
   const setIsFile = createFileOrFolderStore((state) => state.setIsFile);
+  const setProjectPath = projectPathStore((state) => state.setProjectPath);
 
-  if (projectPath) setFolderStructure(projectPath);
+  if (projectPath) {
+    setFolderStructure(projectPath);
+    setProjectPath(projectPath);
+  }
 
   const ws = new WebSocket("ws://localhost:3000/?projectPath=" + encodeURIComponent(projectPath as string));
 
