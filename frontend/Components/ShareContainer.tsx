@@ -2,12 +2,14 @@ import { useState } from 'react';
 import containerIdStore from '../Store/containerIdStore';
 import { ClipboardIcon } from '@heroicons/react/24/solid';
 import { ShareIcon } from '@heroicons/react/24/solid';
+import projectPathStore from '../Store/projectPathStore';
 
 export const ShareContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [imageName, setImageName] = useState('');
   const containerId = containerIdStore((state) => state.containerId);
+  const projectPath = projectPathStore((state) => state.projectPath);
 
   const handleShare = async () => {
     if (!containerId) return;
@@ -19,7 +21,7 @@ export const ShareContainer = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ containerId }),
+        body: JSON.stringify({ projectPath, containerId }),
       });
       
       const data = await response.json();

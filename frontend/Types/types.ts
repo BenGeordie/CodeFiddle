@@ -59,6 +59,11 @@ export interface ContainerIdStoreState {
   setContainerId: (containerId: string | null) => void;
 }
 
+export interface ProjectPathStoreState { 
+  projectPath: string | null;
+  setProjectPath: (projectPath: string | null) => void;
+}
+
 export interface WebsocketStoreState {
   ws: WebSocket | null;
   setWs: (ws: WebSocket) => void;
