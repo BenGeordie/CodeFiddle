@@ -1,16 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import containerIdStore from "../Store/containerIdStore";
-
+import projectPathStore from "../Store/projectPathStore";
 import { Row, Col, Button, Input } from "antd";
 
 export const LandingPage = () => {
   const navigate = useNavigate();
   const [path, setPath] = useState("");
   const setContainerId = containerIdStore((state) => state.setContainerId);
+  const setProjectPath = projectPathStore((state) => state.setProjectPath);
 
   useEffect(() => {
     setContainerId(null);
+    setProjectPath(null);
   }, []);
   
   const handleSubmit = () => {
@@ -21,7 +23,7 @@ export const LandingPage = () => {
     
     try {
       const encodedPath = encodeURIComponent(path);
-      navigate(`/project/${encodedPath}`);
+      navigate(`/resolve/${encodedPath}`);
     } catch (err) {
       console.error('Error encoding path:', err);
       alert('Invalid path format. Please try again.');
