@@ -7,7 +7,7 @@ import projectPathStore from '../Store/projectPathStore';
 export const ShareContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [imageName, setImageName] = useState('');
+  const [gitUrl, setGitUrl] = useState('');
   const containerId = containerIdStore((state) => state.containerId);
   const projectPath = projectPathStore((state) => state.projectPath);
 
@@ -26,7 +26,7 @@ export const ShareContainer = () => {
       
       const data = await response.json();
       if (data.success) {
-        setImageName(data.imageName);
+        setGitUrl(data.gitUrl);
         setShowPopup(true);
       }
     } catch (error) {
@@ -37,7 +37,7 @@ export const ShareContainer = () => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(imageName);
+    navigator.clipboard.writeText(gitUrl);
   };
 
   return (
@@ -75,7 +75,7 @@ export const ShareContainer = () => {
               whiteSpace: 'nowrap',
               flex: 1,
             }}>
-              {imageName}
+              {gitUrl}
             </span>
             <button
               onClick={handleCopy}

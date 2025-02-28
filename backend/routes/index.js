@@ -29,17 +29,16 @@ router
   .post("/share", async (req, res) => {
     try {
       console.log("Sharing container");
-      const { containerId } = req.body;
+      const { projectPath, containerId } = req.body;
       if (!containerId) {
         return res.status(400).json({ error: "Container ID is required" });
       }
-      
-      const imageName = await shareEnvironment(containerId);
+      const gitUrl = await shareEnvironment(projectPath, containerId);
       
       console.log("Done");
       res.json({ 
         success: true, 
-        imageName
+        gitUrl
       });
 
     } catch (error) {
