@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { LandingPage } from "../Pages/LandingPage";
-import { Playground } from "../Pages/Playground";
+import { Editor } from "../Pages/Editor";
+import { ResolvePath } from "../Pages/ResolvePath";
 
 import "./main.css";
 import "allotment/dist/style.css";
@@ -16,8 +17,12 @@ const routes = [
     element: <LandingPage />,
   },
   {
-    path: "project/:projectPath",
-    element: <Playground />,
+    path: "resolve/:projectPathOrLink",
+    element: <ResolvePath />,
+  },
+  {
+    path: "editor/:projectPath",
+    element: <Editor />,
   },
 ];
 
